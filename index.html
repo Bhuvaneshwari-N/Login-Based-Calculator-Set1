@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login-based Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { margin-bottom: 20px; }
+        input[type="text"], input[type="password"], select {
+            margin-bottom: 10px; display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>Sign Up</h2>
+    <form id="signup-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+
+        <label for="operator">Choose Operator:</label>
+        <select id="operator" required>
+            <option value="+">Addition</option>
+            <option value="-">Subtraction</option>
+            <option value="*">Multiplication</option>
+        </select>
+
+        <button type="button" onclick="signUp()">Submit</button>
+    </form>
+
+    <h2>Login</h2>
+    <form id="login-form">
+        <label for="login-email">Email:</label>
+        <input type="text" id="login-email" required>
+
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" required>
+
+        <button type="button" onclick="login()">Login</button>
+    </form>
+
+    <h2>Calculator</h2>
+    <div id="calculator" style="display:none;">
+        <p id="welcome-message"></p>
+        <form id="calculator-form">
+            <label for="input1">Input 1:</label>
+            <input type="text" id="input1" required>
+
+            <label for="input2">Input 2:</label>
+            <input type="text" id="input2" required>
+
+            <label for="output">Output:</label>
+            <input type="text" id="output" readonly>
+
+            <button type="button" onclick="calculate()">Calculate</button>
+        </form>
+    </div>
+
+    <script>
+        // In-memory "database" to store user details
+        const users = {};
+
+        // Function to sign up a new user
+        function signUp() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const operator = document.getElementById('operator').value;
+
+            if (users[email]) {
+                alert("User already exists! Please login.");
+            } else {
+                users[email] = { name, password, operator };
+                alert("User signed up successfully! Please login.");
+            }
+        }
+
+        // Function to login the user
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const user = users[email];
+            if (user && user.password === password) {
+                alert("Login successful!");
+                document.getElementById('welcome-message').innerText = Welcome ${user.name}, You have registered for the ${user.operator} operation;
+                document.getElementById('calculator').style.display = 'block';
+            } else {
+                alert("Invalid email or password.");
+            }
+        }
+
+        // Function to perform the calculation based on operator selected at signup
+        function calculate() {
+            const input1 = parseFloat(document.getElementById('input1').value);
+            const input2 = parseFloat(document.getElementById('input2').value);
+            const email = document.getElementById('login-email').value;
+            const user = users[email];
+            let result;
+
+            if (user.operator === '+') {
+                result = input1 + input2;
+            } else if (user.operator === '-') {
+                result = input1 - input2;
+            } else if (user.operator === '*') {
+                result = input1 * input2;
+            }
+
+            document.getElementById('output').value = result;
+        }
+    </script>
+</body>
+</html>
